@@ -10,16 +10,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User{
-  id        String   @id @default(uuid())
-  name      String
-  password  String
-  apiKey    String   @unique
+model User {
+  id       String @id @default(uuid())
+  name     String
+  password String
 }
 
-model BooksData{
-  id String @id @default(cuid())
-  title String
-  author String
+model BooksData {
+  id        String  @id @default(cuid())
+  title     String
+  author    String
   available Boolean @default(true)
+}
+
+model api {
+  id     Int    @id @default(autoincrement())
+  apiKey String
 }

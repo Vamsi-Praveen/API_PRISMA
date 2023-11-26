@@ -4,7 +4,7 @@ const prisma = new PrismaClient()
 
 export const getAllBooks = async (req, res) => {
     try {
-        if (req.userExists) {
+        if (req.apiExists) {
             const books = await prisma.booksData.findMany();
             return res.status(200).json({ message: "Books fetched Succesfully", data: books });
         }
@@ -24,19 +24,25 @@ export const getBookById = async (req, res) => {
 export const addBook = async (req, res) => {
     try {
         const { title, author } = req.body;
-        const book = await prisma.booksData.create({
-            data: {
-                title: title, author: author
-            }
-        })
-            .then((data) => {
-                res.status(201).send({ "message": "Book Added Succesfull" })
+        if (req.apiExists) {
+            const book = await prisma.booksData.create({
+                data: {
+                    title: title, author: author
+                }
             })
-            .catch((err) => {
-                res.status(300).send({ "message": "Failed to Add Book", "error": err })
-            })
+                .then((data) => {
+                    res.status(201).send({ "message": "Book Added Succesfull" })
+                })
+                .catch((err) => {
+                    res.status(300).send({ "message": "Failed to Add Book", "error": err })
+                })
+        }
+
 
     } catch (error) {
         console.log(error)
+    }
+    finally {
+        await prisma.$disconnect()
     }
 }

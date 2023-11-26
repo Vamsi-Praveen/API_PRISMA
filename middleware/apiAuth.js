@@ -4,21 +4,23 @@ const prisma = new PrismaClient();
 
 export const apiAuth = async (req, res, next) => {
     try {
-        const apiKey = req.query.key;
+        const apiKey = req.headers['x-api-key'];
         if(!apiKey)
         {
             return res.status(400).send({"message":"API Key required"})
         }
-        const userData = await prisma.user.findUnique(
+        const apiData = await prisma.api.findFirst(
             {
-                where: { apiKey: apiKey }
+                where:{
+                    apiKey:apiKey
+                }
             }
         )
-        if (!userData) {
-            req.userExists=false
+        if (!apiData) {
+            req.apiExists=false
             return res.status(401).send({ "message": "Invalid/Wrong API key." })
         }
-        req.userExists=true;
+        req.apiExists=true;
 
     } catch (error) {
         console.log(error)

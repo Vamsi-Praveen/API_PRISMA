@@ -5,14 +5,12 @@ const prisma = new PrismaClient()
 
 export const addUser = async (req, res, next) => {
     const { name, password} = req.body;
-    const apiKey = req.apiKeyGen;
     const hashedPassword = await bcrypt.hash(password, 10)
     try {
         await prisma.user.create({
             data: {
                 name: name,
                 password: hashedPassword,
-                apiKey:apiKey
             }
         })
             .then((data) => {
@@ -23,5 +21,8 @@ export const addUser = async (req, res, next) => {
             })
     } catch (err) {
         console.log(err)
+    }
+    finally{
+        await prisma.$disconnect()
     }
 }

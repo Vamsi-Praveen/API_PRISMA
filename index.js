@@ -4,6 +4,8 @@ import bodyParser from "body-parser"
 import 'dotenv/config'
 import userRouter from "./routes/userRoute.js"
 import bookRoute from "./routes/bookRoute.js"
+import { apiKeyGen } from "./middleware/apiKeyGen.js"
+import { apiUser } from "./middleware/apiUser.js"
 const app = express()
 app.use(cors())
 app.use(bodyParser.json())
@@ -12,6 +14,8 @@ app.use(bodyParser.json())
 app.use('/api/user', userRouter)
 
 app.use('/api/books',bookRoute)
+
+app.post('/api/genAPIKEY',apiUser,apiKeyGen);
 
 const port = process.env.PORT || 3000
 app.listen(port, () => {
