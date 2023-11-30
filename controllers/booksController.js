@@ -9,6 +9,7 @@ export const getAllBooks = async (req, res) => {
             return res.status(200).json({ message: "Books fetched Succesfully", data: books });
         }
     } catch (error) {
+        return res.status(500).json({"message":"Internal Server Error"})
         console.log(error)
     }
 }
@@ -16,7 +17,19 @@ export const getAllBooks = async (req, res) => {
 export const getBookById = async (req, res) => {
     try {
         const id = req.params.bookId;
+        if(id)
+        {
+            const book = await prisma.booksData.findUnique(
+                {
+                    where:{
+                        id:id
+                    }
+                }
+            );
+            return res.status(200).json({"Book Data":book})
+        }
     } catch (error) {
+        return res.status(500).json({"message":"Internal Server Error"})
         console.log(error)
     }
 }
@@ -40,6 +53,7 @@ export const addBook = async (req, res) => {
 
 
     } catch (error) {
+        return res.status(500).json({"message":"Internal Server Error"})
         console.log(error)
     }
     finally {
